@@ -1,6 +1,4 @@
 import React, { createContext, useState, useEffect } from "react";
-import { db } from '../firebase';
-import { query, collection, onSnapshot } from 'firebase/firestore';
 
 const initialState = {
   transactions: [],
