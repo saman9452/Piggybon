@@ -1,37 +1,37 @@
-import React, {createContext, useReducer} from "react";
-import AppReducer from './AppReducer';
-
+import React, { createContext, useState, useEffect } from "react";
+import { db } from '../firebase';
+import { query, collection, onSnapshot } from 'firebase/firestore';
 
 const initialState = {
-    transactions: []
-}
+  transactions: [],
+};
 
 export const GlobalContext = createContext(initialState);
 
 export const GlobalProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(AppReducer, initialState);
+    const [transactions, setTransactions] = useState([]);
 
-    //Actions
-    function deleteTransaction (id){
-        dispatch({
-            type: 'DELETE_TRANSACTION',
-            payload: id
-        });
-    }
+  // Actions
+  function deleteTransaction(id) {
+    setTransactions((prevTransactions) =>
+      prevTransactions.filter((transaction) => transaction.id !== id)
+    );
+  }
 
-    function createTransaction (transaction){
-        dispatch({
-            type: 'CREATE_TRANSACTION',
-            payload: transaction
-        });
-    }
+  function createTransaction(transaction) {
+    setTransactions((prevTransactions) => [...prevTransactions, transaction]);
+  }
 
-    return(<GlobalContext.Provider value={{
-         transactions: state.transactions,
-         deleteTransaction,
-         createTransaction
-         }}>
-        {children}
-    </GlobalContext.Provider>);
-  
-}
+  return (
+    <GlobalContext.Provider
+      value={{
+        transactions,
+        setTransactions,
+        deleteTransaction,
+        createTransaction,
+      }}
+    >
+      {children}
+    </GlobalContext.Provider>
+  );
+};
