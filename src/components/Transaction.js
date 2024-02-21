@@ -1,10 +1,20 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
+import {
+  doc,
+  deleteDoc,
+} from 'firebase/firestore';
+import { db } from '../firebase';
+
 
 const Transaction = ({transaction}) => {
-    const {deleteTransaction} = useContext(GlobalContext);
 
   const sign = transaction.amount < 0 ? '-' : '+';
+
+    // Delete todo
+    const deleteTransaction = async (id) => {
+      await deleteDoc(doc(db, 'expenses', id));
+    };
 
   return (
     <li className={transaction.amount<0 ? "minus": "plus"}>
