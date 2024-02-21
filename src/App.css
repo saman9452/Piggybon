@@ -116,11 +116,20 @@ input[type='number'] {
   background-color: #fff;
   box-shadow: var(--box-shadow);
   color: #333;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.list li div {
   display: flex;
   justify-content: space-between;
   position: relative;
-  padding: 10px;
-  margin: 10px 0;
+}
+
+.subtext {
+  margin-top: 10px;
+  color: #747070;
+  font-size: 14px;
 }
 
 .list li.plus {
