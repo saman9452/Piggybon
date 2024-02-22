@@ -159,3 +159,13 @@ input[type='number'] {
 .list li:hover .delete-btn {
   opacity: 1;
 }
+
+.category-dropdown {
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
