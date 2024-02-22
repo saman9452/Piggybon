@@ -32,7 +32,8 @@ const AddTransaction = () => {
             text,
             amount: type == "expense" ? -parseFloat(amount) : parseFloat(amount),
             type: type,
-            category: selectedCategory
+            category: selectedCategory,
+            date: new Date()
         });
         setText('');
         setAmount('');
@@ -65,7 +66,7 @@ const AddTransaction = () => {
                     <label htmlFor="category">Category</label>
                     <select className="category-dropdown" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
                         {categories.map(category => (
-                            <option key={category.id} value={category.id}>{category.name}</option>
+                            <option key={category.id} value={category.name}>{category.name}</option>
                         ))}
                     </select>
                 </div>
