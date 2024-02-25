@@ -1,22 +1,33 @@
 import './App.css';
-import Header from './components/Header';
-import Balance from './components/Balance';
-import IncomeExpenses from './components/IncomeExpenses';
-import TransactionsList from './components/TransactionsList';
-import AddTransaction from './components/AddTransaction';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Navbar from './components/layout/Navbar';
 import { GlobalProvider } from './context/GlobalState';
+import Dashboard from './components/dashboard/dashboard';
+
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Dashboard />,
+    // loader: rootLoader,
+    // children: [
+    //   {
+    //     path: "/",
+    //     element: <Dashboard />
+    //   },
+    // ]
+  }
+]);
 
 function App() {
-
   return (
     <GlobalProvider>
-      <Header />
-      <div className='container'>
-        <Balance />
-        <IncomeExpenses />
-        <TransactionsList />
-        <AddTransaction />
-      </div>
+      <RouterProvider router={router}>
+        <div className="App"> 
+          <Navbar />
+          {/* <Header /> */} 
+        </div>
+      </RouterProvider>
     </GlobalProvider>
   );
 }

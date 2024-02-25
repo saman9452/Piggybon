@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { GlobalContext } from '../context/GlobalState';
+import { GlobalContext } from '../../context/GlobalState';
 import Transaction from './Transaction';
-import { db } from '../firebase';
+import { db } from '../../firebase';
 import { query, collection, onSnapshot } from 'firebase/firestore';
 
 const TransactionsList = () => {

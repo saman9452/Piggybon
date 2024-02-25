@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import { GlobalContext } from '../context/GlobalState';
+import { GlobalContext } from '../../context/GlobalState';
 import {
   doc,
   deleteDoc,
 } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '../../firebase';
 
 
 const Transaction = ({transaction}) => {

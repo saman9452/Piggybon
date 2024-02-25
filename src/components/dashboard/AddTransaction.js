@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { GlobalContext } from '../context/GlobalState';
-import { db } from '../firebase';
+import { GlobalContext } from '../../context/GlobalState';
+import { db } from '../../firebase';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 
 const AddTransaction = () => {
