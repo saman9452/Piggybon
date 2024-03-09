@@ -1,22 +1,25 @@
 import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
-import { GlobalProvider } from './context/GlobalState';
 import Dashboard from './components/dashboard/dashboard';
+import TransactionDetail from './components/transaction/TransactionDetail';
+import Login from './components/auth/Login';
+import Register from './components/auth/Register';
 
 function App() {
   return (
-    <GlobalProvider>
-      <BrowserRouter>
-        <div className="App"> 
-          <Navbar />
-          <Routes>
-            <Route path='/' element={<Dashboard />} />
-          </Routes>
-          {/* <Header /> */} 
-        </div>
-      </BrowserRouter>
-    </GlobalProvider>
+    <BrowserRouter>
+      <div className="App"> 
+        <Navbar />
+        <Switch>
+          <Route exact path='/' component={Dashboard} />
+          <Route path='/transaction/:id' element={TransactionDetail} />
+          <Route path='/login' component={Login} />
+          <Route path='/signup' component={Register} />
+        </Switch>
+        {/* <Header /> */} 
+      </div>
+    </BrowserRouter>
   );
 }
 
