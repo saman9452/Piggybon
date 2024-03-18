@@ -1,52 +1,72 @@
-import React, { useState } from 'react';
-import { auth } from '../../firebase'; 
+import React, { useState, Component } from 'react';
+import { signUp } from "../../store/actions/authActions";
+import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 
-const Register = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [firstname, setFirstname] = useState('');
-    const [lastname, setLastname] = useState('');
-    const [error, setError] = useState(null);
+// import { auth } from '../../firebase'; 
 
-    const handleRegister = async (e) => {
+class Register extends Component {
+    state = {
+        email: "",
+        password: ""
+      };
+    
+      handleChange = (e) => {
+        this.setState({
+          [e.target.id]: e.target.value,
+        });
+      };
+    
+      handleSubmit = (e) => {
         e.preventDefault();
-        try {
-            const userCredential = await auth.createUserWithEmailAndPassword(email, password, firstname, lastname);
-            console.log('User registered:', userCredential.user);
-            // Optionally, you can redirect the user to another page upon successful registration
-        } catch (err) {
-            setError(err.message);
-            console.error('Registration failed:', err);
-        }
-    };
+        console.log(this.state);
+        this.props.signUp(this.state);
+      };
 
-    return (
-        <div className='container'>
-            <h5 className="grey-text text-darken-3">Register</h5>
-            <form className='white' onSubmit={handleRegister}>
-                <div className="input-field">
-                    <label>Email:</label>
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                </div>
-                <div className="input-field">
-                    <label>Password:</label>
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                </div>
-                <div className="input-field">
-                    <label>First Name:</label>
-                    <input type="password" value={password} onChange={(e) => setFirstname(e.target.value)} />
-                </div>
-                <div className="input-field">
-                    <label>Last Name:</label>
-                    <input type="password" value={password} onChange={(e) => setLastname(e.target.value)} />
-                </div>
-                <div className="input-field">
-                    <button className="btn primary-btn lighten-1 z-depth-0">Register</button>
-                </div>
-            </form>
-            {error && <p>{error}</p>}
-        </div>
-    );
+    render() {
+      const { uid } = this.props;
+      if (uid) return <Redirect to="/" />;
+
+        return (
+            <div className='container'>
+                <h5 className="grey-text text-darken-3">Register</h5>
+                <form className='white' onSubmit={this.handleSubmit}>
+                    <div className="input-field">
+                        <label>Email:</label>
+                        <input type="email" id="email" onChange={this.handleChange} />
+                    </div>
+                    <div className="input-field">
+                        <label>Password:</label>
+                        <input type="password" id="password" onChange={this.handleChange} />
+                    </div>
+                    {/* <div className="input-field">
+                        <label>Your Name:</label>
+                        <input type="text" id="name" onChange={this.handleChange} />
+                    </div> */}
+                    <div className="input-field">
+                        <button className="btn primary-btn lighten-1 z-depth-0">Register</button>
+                    </div>
+                </form>
+                {/* {error && <p>{error}</p>} */}
+            </div>
+        );
+    }
+
+    
 };
 
-export default Register;
+const mapStateToProps = (state) => {
+    console.log(state);
+    const uid = state.firebase.auth.uid;
+    return {
+      uid: uid,
+    };
+  };
+  
+  const mapDispatchToProps = (dispatch) => {
+    return {
+      signUp: (creds) => dispatch(signUp(creds)),
+    };
+  };
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(Register);
