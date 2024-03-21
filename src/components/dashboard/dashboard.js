@@ -1,16 +1,29 @@
+import React, { Component } from 'react';
 import Balance from './Balance';
 import IncomeExpenses from './IncomeExpenses';
 import TransactionsList from './TransactionsList';
 import AddTransaction from './AddTransaction';
+import { connect } from 'react-redux';
 
-const Dashboard = ({}) => {
-    return (
-        <div className='container'>
-            <Balance />
-            <IncomeExpenses />
-            <TransactionsList />
-            <AddTransaction />
-        </div>
-    )
+class Dashboard extends Component {
+    render() {
+        const { transactions } = this.props;
+
+        return (
+            <div className='container'>
+                <Balance />
+                <IncomeExpenses />
+                <TransactionsList transactions={transactions} />
+                <AddTransaction />
+            </div>
+        )
+    }
 }
-export default Dashboard;
+
+const mapStateToProps = (state) => {
+    return {
+        transactions: state.transaction.transactions
+    }
+  }
+
+  export default connect(mapStateToProps)(Dashboard)

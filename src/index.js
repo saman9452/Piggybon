@@ -1,20 +1,51 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { createStore, compose, applyMiddleware } from 'redux';
-import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider, useSelector } from 'react-redux';
 import thunk from 'redux-thunk';
-import rooteducer from './store/reducers/rootReducer';
-import { reduxFirestore, getFirestore } from 'redux-firestore';
-import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
-import fbConfig from './config/firebase'
+import rootReducer from './store/reducers/rootReducer';
+import { createFirestoreInstance } from 'redux-firestore';
+import { getFirebase, ReactReduxFirebaseProvider, isLoaded } from 'react-redux-firebase'; //reactReduxFirebase,
+import firebase from './config/firebase';
 
-const store = createStore(rooteducer, compose(
-    applyMiddleware(thunk.withExtraArgument({getFirebase, getFirestore})), // this is a store enhancer
-    reduxFirestore(fbConfig), 
-    reactReduxFirebase(fbConfig)
-));
+const store = createStore(
+    rootReducer,
+    applyMiddleware(thunk.withExtraArgument({ getFirebase }))
+  );
 
+const rrfProps = {
+    firebase,
+    config: {},
+    dispatch: store.dispatch,
+    createFirestoreInstance,
+  };
 
-ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+  function AuthIsLoaded({ children }) {
+    const auth = useSelector(state => state.firebase.auth);
+    if (!isLoaded(auth))
+      return (
+        <div className="text-center">
+          <div
+            className="spinner-grow text-primary"
+            style={{ width: "7rem", height: "7rem" }}
+            role="status"
+          >
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      );
+    return children;
+  }
+
+ReactDOM.render(
+    <Provider store={store}>
+        <ReactReduxFirebaseProvider {...rrfProps}>
+            <AuthIsLoaded>
+                <App />
+            </AuthIsLoaded>
+        </ReactReduxFirebaseProvider>
+    </Provider>,
+    document.getElementById('root')
+);
 
