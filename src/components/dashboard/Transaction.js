@@ -4,23 +4,19 @@ import {
   doc,
   deleteDoc,
 } from 'firebase/firestore';
-import { db } from '../../firebase';
+import { db } from '../../config/firebase';
 
 
 const Transaction = ({transaction}) => {
-  console.log(transaction);
 
   const sign = transaction.amount < 0 ? '-' : '+';
 
-    // Delete todo
-    const deleteTransaction = async (id) => {
-      await deleteDoc(doc(db, 'expenses', id));
-    };
+    // const deleteTransaction = async (id) => {
+    //   await deleteDoc(doc(db, 'expenses', id));
+    // };
 
-    // Convert Firestore timestamp object to JavaScript Date object
-    const timestamp = new Date(transaction.date.seconds * 1000);
+    const timestamp = new Date(transaction.createdAt.seconds * 1000);
 
-    // Format the date
     const formattedDate = timestamp.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -28,14 +24,14 @@ const Transaction = ({transaction}) => {
     });
 
   return (
-    <li className={transaction.amount<0 ? "minus": "plus"}>
+    <li className={transaction.type =="expense" ? "minus": "plus"}>
       <div>
-        {transaction.text} <span>{sign}${Math.abs(transaction.amount)}</span>
+        {transaction.title} <span>{sign}${Math.abs(transaction.amount)}</span>
       </div>
       <div className='subtext'>
         <span>{transaction.category}</span> <span>{formattedDate}</span>
       </div>
-      <button onClick={ () => deleteTransaction(transaction.id)} className="delete-btn">x</button>
+      {/* <button onClick={ () => deleteTransaction(transaction.id)} className="delete-btn">x</button> */}
     </li>
   )
 }
