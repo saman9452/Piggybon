@@ -4,10 +4,16 @@ import IncomeExpenses from './IncomeExpenses';
 import TransactionsList from './TransactionsList';
 import AddTransaction from './AddTransaction';
 import { connect } from 'react-redux';
+import { compose } from "redux";
+import { Redirect } from 'react-router-dom';
+import { firestoreConnect, withFirestore  } from "react-redux-firebase";
+
 
 class Dashboard extends Component {
     render() {
-        const { transactions } = this.props;
+        const { auth, transactions } = this.props;
+
+        if (!auth.uid) return <Redirect to='/signin' /> 
 
         return (
             <div className='container'>
@@ -20,10 +26,22 @@ class Dashboard extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        transactions: state.transaction.transactions
-    }
-  }
+export default compose(
+    connect((state) => ({
+        uid: state.firebase.auth.uid,
+        auth: state.firebase.auth,
+        transactions: state.firestore.data.transactions,
+    })),
+    withFirestore,
+    firestoreConnect((ownProps) => {
 
-  export default connect(mapStateToProps)(Dashboard)
+        if (!ownProps.uid) return [];
+        return [
+            {
+                collection: 'transactions',
+                where: [['UserId', '==', ownProps.uid]],
+                // orderBy: ["createdAt", "desc"],
+            }
+        ];
+    }),
+)(Dashboard);
