@@ -1,79 +1,99 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { GlobalContext } from '../../context/GlobalState';
-import { db } from '../../firebase';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { createTransaction } from '../../store/actions/transactionActions';
+import { compose } from "redux";
+import { firestoreConnect, withFirestore  } from "react-redux-firebase";
 
-const AddTransaction = () => {
-    const [text, setText] = useState(''); // text: current state value. setText: function that allows you to update the state value
-    const [amount, setAmount] = useState('');
-    const [type, setType] = useState('expense');
-    const [categories, setCategories] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState('');
+class AddTransaction extends Component {
 
-    useEffect(() => {
-        const fetchCategories = async () => {
-            const categoriesCollection = collection(db, 'categories');
-            const categoriesSnapshot = await getDocs(categoriesCollection);
-            const categoriesData = categoriesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setCategories(categoriesData);
-            setSelectedCategory(categoriesData.length > 0 ? categoriesData[0].id : ''); // Set the default selected category
-        };
-        fetchCategories();
-    }, []);
+    state = {
+        title: '',
+        amount: '',
+        type: 'expense',
+        category: 'Pet'
+    }
 
-
-    const createTransaction = async (e) => {
+    handleSubmit = (e) => {
         e.preventDefault();
-        if (text === '' || isNaN(parseFloat(amount))) {
-            alert('Please enter a valid amount');
-            return;
-        }
-        await addDoc(collection(db, 'expenses'), {
-            text,
-            amount: type == "expense" ? -parseFloat(amount) : parseFloat(amount),
-            type: type,
-            category: selectedCategory,
-            date: new Date()
-        });
-        setText('');
-        setAmount('');
-    };
 
-    return (
-        <div>
-            <h3>Add new transaction</h3>
-            <form onSubmit={createTransaction}>
-                <div className="form-control">
-                    <label htmlFor="text">Text</label>
-                    <input type="text" value={text} onChange={(e) => setText(e.target.value)} placeholder="Enter text..." />
-                </div>
-                <div className="form-control">
-                    <label htmlFor="amount">Amount</label>
-                    <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="Enter amount..." />
-                </div>
-                <div className="form-control">
-                    <label>Type:</label>
-                    <div>
-                        <input type="radio" id="expense" name="type" value="expense" checked={type === 'expense'} onChange={() => setType('expense')} />
-                        <label htmlFor="expense">Expense</label>
+        this.props.createTransaction(this.state);
+        document.getElementById("addTransactionForm").reset();
+        console.log(this.state);
+    }
+
+    handleChange = (e) => {
+        this.setState({
+          [e.target.id]: e.target.value
+        })
+      }
+
+    render() {
+        const { auth, categories } = this.props;
+        console.log(categories);
+        return (
+            <div className='container'>
+                <form id="addTransactionForm" className="white" onSubmit={this.handleSubmit}>
+                    <h5>Add new transaction</h5>
+                    <div className="input-field">
+                        <label htmlFor="text">Title</label>
+                        <input type="text" id='title' onChange={this.handleChange} />
                     </div>
-                    <div>
-                        <input type="radio" id="income" name="type" value="income" checked={type === 'income'} onChange={() => setType('income')} />
-                        <label htmlFor="income">Income</label>
+                    <div className="input-field">
+                        <label htmlFor="amount">Amount</label>
+                        <input type="number" id="amount" onChange={this.handleChange} />
                     </div>
-                </div>
-                <div className="form-control">
-                    <label htmlFor="category">Category</label>
-                    <select className="category-dropdown" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
-                        {categories.map(category => (
-                            <option key={category.id} value={category.name}>{category.name}</option>
-                        ))}
-                    </select>
-                </div>
-                <button className="btn">Add transaction</button>
-            </form>
-        </div>
-    );
+                    <div className="row">
+                        <label>Type:</label>
+                        <p>
+                            <label>
+                                <input name="type" type="radio" id="type" value="expense" checked={this.state.type === 'expense'} onChange={this.handleChange}  />
+                                <span>Expense</span>
+                            </label>
+                        </p>
+                        <p>
+                            <label>
+                                <input name="type" type="radio" id="type" value="income" checked={this.state.type === 'income'} onChange={this.handleChange}  />
+                                <span>Income</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div className="row">
+                        <label htmlFor="category">Category</label>
+                        <select className="" id="selectedCategory" onChange={this.handleChange}>
+                            <option value="" disabled>Choose your option</option>
+                            {categories && Object.entries(categories).map(([id, category]) => (
+                                <option key={id} value={category.name}>{category.name}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <button type="submit" className="btn">Add transaction</button>
+                </form>
+            </div>
+        );
+    }
 };
 
-export default AddTransaction;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        createTransaction: (transaction) => dispatch(createTransaction(transaction))
+    }
+}
+
+export default compose(
+    connect((state) => ({
+        uid: state.firebase.auth.uid,
+        auth: state.firebase.auth,
+        categories: state.firestore.data.categories,
+    }),
+    mapDispatchToProps
+    ),
+    withFirestore,
+    firestoreConnect(() => {
+
+        return [
+            {
+                collection: 'categories',
+            }
+        ];
+    }),
+)(AddTransaction);
