@@ -8,6 +8,8 @@ import rootReducer from './store/reducers/rootReducer';
 import { createFirestoreInstance } from 'redux-firestore';
 import { getFirebase, ReactReduxFirebaseProvider, isLoaded } from 'react-redux-firebase'; //reactReduxFirebase,
 import firebase from './config/firebase';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './theme';
 
 const store = createStore(
     rootReducer,
@@ -41,9 +43,11 @@ const rrfProps = {
 ReactDOM.render(
     <Provider store={store}>
         <ReactReduxFirebaseProvider {...rrfProps}>
-            <AuthIsLoaded>
-                <App />
-            </AuthIsLoaded>
+        <ThemeProvider theme={theme}> {/* Wrap your App with ThemeProvider */}
+                <AuthIsLoaded>
+                    <App />
+                </AuthIsLoaded>
+            </ThemeProvider>
         </ReactReduxFirebaseProvider>
     </Provider>,
     document.getElementById('root')
