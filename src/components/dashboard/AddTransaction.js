@@ -15,10 +15,10 @@ class AddTransaction extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-
-        this.props.createTransaction(this.state);
+        const amount = this.state.type === "expense" ? -parseFloat(this.state.amount) : parseFloat(this.state.amount);
+        const transaction = { ...this.state, amount };
+        this.props.createTransaction(transaction);
         document.getElementById("addTransactionForm").reset();
-        console.log(this.state);
     }
 
     handleChange = (e) => {
@@ -29,7 +29,7 @@ class AddTransaction extends Component {
 
     render() {
         const { auth, categories } = this.props;
-        console.log(categories);
+        // console.log(categories);
         return (
             <div className='container'>
                 <form id="addTransactionForm" className="white" onSubmit={this.handleSubmit}>
