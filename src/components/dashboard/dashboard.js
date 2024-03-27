@@ -1,26 +1,29 @@
-import React, { Component } from 'react';
-import Balance from './Balance';
-import IncomeExpenses from './IncomeExpenses';
-import TransactionsList from './TransactionsList';
-import AddTransaction from './AddTransaction';
+import React, { Component, Suspense } from 'react';
 import { connect } from 'react-redux';
 import { compose } from "redux";
 import { Redirect } from 'react-router-dom';
 import { firestoreConnect, withFirestore  } from "react-redux-firebase";
+const Balance = React.lazy(() => import('./Balance'));
+const IncomeExpenses = React.lazy(() => import('./IncomeExpenses'));
+const TransactionsList = React.lazy(() => import('./TransactionsList'));
+const AddTransaction = React.lazy(() => import('./AddTransaction'));
 
 
 class Dashboard extends Component {
     render() {
         const { auth, transactions } = this.props;
+        // console.log(transactions);
 
         if (!auth.uid) return <Redirect to='/signin' /> 
 
         return (
             <div className='container'>
-                <Balance />
-                <IncomeExpenses />
-                <TransactionsList transactions={transactions} />
-                <AddTransaction />
+                <Suspense fallback={<div>Loading...</div>}>
+                    <Balance />
+                    <IncomeExpenses transactions={transactions} />
+                    <TransactionsList transactions={transactions} />
+                    <AddTransaction />
+                </Suspense>
             </div>
         )
     }

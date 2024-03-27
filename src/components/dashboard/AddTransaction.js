@@ -29,7 +29,7 @@ class AddTransaction extends Component {
 
     render() {
         const { auth, categories } = this.props;
-        // console.log(categories);
+
         return (
             <div className='container'>
                 <form id="addTransactionForm" className="white" onSubmit={this.handleSubmit}>
