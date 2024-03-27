@@ -1,5 +1,13 @@
 @import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
 
+/* Hex codes: bright orange #FF9F1C, light orange #FFBF69, muted pink #CB997E, pale peach #FFE8D6 
+medium blue #0077B6
+*/
+
+html {
+  min-height: 100%;
+}
+
 :root {
   --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
@@ -14,15 +22,17 @@ body {
   /* flex-direction: column; */
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   margin: 0;
   font-family: 'Lato', sans-serif;
   font-size: 18px;
+  padding: 0;
+  min-height: 100%;
 }
 
 .container {
-  margin: 30px auto;
-  width: 400px;
+  /* margin: 30px auto; */
+  /* width: 400px; */
 }
 
 h1 {
@@ -39,6 +49,34 @@ h3 {
 h4 {
   margin: 0;
   text-transform: uppercase;
+}
+
+form {
+  padding: 20px;
+  margin-top: 60px;
+}
+
+form button, form h5 {
+  margin: 20px 0;
+}
+
+.input-field>label {
+  font-size: 18px !important;
+}
+
+input[type=text]:not(.browser-default):focus:not([readonly]),
+input[type=email]:not(.browser-default):focus:not([readonly]),
+input[type=password]:not(.browser-default):focus:not([readonly]),
+textarea.materialize-textarea:focus:not([readonly]){
+  border-color: #0077B6;
+  box-shadow: none;
+}
+
+input[type=text]:not(.browser-default):focus:not([readonly]) + label,
+textarea.materialize-textarea:focus:not([readonly]) + label,
+input[type=email]:not(.browser-default):focus:not([readonly]) + label,
+input[type=password]:not(.browser-default):focus:not([readonly]) + label{
+  color: #ec407a !important;
 }
 
 .inc-exp-container {
@@ -72,11 +110,11 @@ h4 {
 .money.minus {
   color: #c0392b;
 }
-
+/* 
 label {
   display: inline-block;
   margin: 10px 0;
-}
+} */
 
 input[type='text'],
 input[type='number'] {
@@ -90,15 +128,17 @@ input[type='number'] {
 
 .btn {
   cursor: pointer;
-  background-color: #9c88ff;
+  background-color: #0077B6;
   box-shadow: var(--box-shadow);
   color: #fff;
   border: 0;
   display: block;
   font-size: 16px;
   margin: 10px 0 30px;
-  padding: 10px;
-  width: 100%;
+}
+
+.primary-btn:focus {
+  background-color: #0077B6 !important;
 }
 
 .btn:focus,
@@ -169,3 +209,7 @@ input[type='number'] {
   box-sizing: border-box;
   margin-bottom: 10px;
 }
+
+select {
+  display: block;
+}    
