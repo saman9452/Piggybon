@@ -19,7 +19,7 @@ class Dashboard extends Component {
         return (
             <div className='container'>
                 <Suspense fallback={<div>Loading...</div>}>
-                    <Balance />
+                    <Balance transactions={transactions} />
                     <IncomeExpenses transactions={transactions} />
                     <TransactionsList transactions={transactions} />
                     <AddTransaction />
