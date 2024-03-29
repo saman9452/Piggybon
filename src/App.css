@@ -34,7 +34,9 @@ body {
   /* margin: 30px auto; */
   /* width: 400px; */
 }
-
+.App {
+  background-color: #f8e8e4; /* #f9f3de; */
+}
 h1 {
   letter-spacing: 1px;
   margin: 0;
@@ -212,4 +214,22 @@ input[type='number'] {
 
 select {
   display: block;
-}    
+} 
+
+.cash-flow-container {
+  width: 30%;
+  margin: 1rem auto;
+  background-color: white;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.cash-flow-container > h4 {
+  font-family: 'Lato';
+  text-transform: math-auto;
+}
+
+.bar-chart {
+  margin-top: 1.5rem;
+  /* border: 1px black solid; */
+}
